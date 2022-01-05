@@ -22,6 +22,3 @@ with Flow(FLOW_NAME, storage=STORAGE) as flow:
     api_token = PrefectSecret("MONTE_CARLO_API_SECRET_KEY")
     resources = monte_carlo(api_key_id=api_key_id, api_token=api_token)
     print_resources(resources)
-
-if __name__ == "__main__":
-    flow.run()

@@ -1,3 +1,7 @@
+"""
+To test the flow with no tags:
+prefect run --name 02_add_custom_lineage_tags --param lineage_tags=null --execute
+"""
 from prefect import Flow, Parameter
 from prefect.storage import GitHub
 from prefect.tasks.secrets import PrefectSecret
@@ -21,7 +25,7 @@ with Flow(FLOW_NAME, storage=STORAGE) as flow:
     api_key_id = PrefectSecret("MONTE_CARLO_API_KEY_ID")
     api_token = PrefectSecret("MONTE_CARLO_API_SECRET_KEY")
     full_table_name = Parameter(
-        "full_table_name", default="prefect-community:jaffle_shop.raw_orders"
+        "full_table_name", default="prefect-community:jaffle_shop.raw_payments"
     )
     lineage_tags = Parameter(
         "lineage_tags",
@@ -34,5 +38,3 @@ with Flow(FLOW_NAME, storage=STORAGE) as flow:
         api_key_id=api_key_id,
         api_token=api_token,
     )
-# to test the flow with no tags:
-# prefect run --name 02_test_flow_MonteCarloCreateOrUpdateNodeWithTags --param lineage_tags=null --execute

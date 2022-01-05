@@ -1,5 +1,5 @@
 import pandas as pd
-from prefect import task, Flow
+from prefect import task, Flow, Task
 from prefect.run_configs import LocalRun
 from prefect.storage import GitHub
 from prefect.tasks.secrets import PrefectSecret
