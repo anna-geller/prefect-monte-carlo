@@ -29,7 +29,10 @@ with Flow(FLOW_NAME, storage=STORAGE) as flow:
     )
     lineage_tags = Parameter(
         "lineage_tags",
-        default=[{"propertyName": "data_owner", "propertyValue": "sales"}],
+        default=[
+            {"propertyName": "data_owner", "propertyValue": "sales"},
+            {"propertyName": "data_source_system", "propertyValue": "stripe"},
+        ],
     )
     monte_carlo(
         node_name=full_table_name,
