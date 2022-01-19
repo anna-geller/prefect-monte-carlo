@@ -1,10 +1,9 @@
 import pandas as pd
-from prefect import task, Flow
+from prefect import task, Flow, Parameter
 from prefect.run_configs import LocalRun
 from prefect.storage import GitHub
 
 
-DATASET = "raw_customers"
 FLOW_NAME = "00_extract_load"
 STORAGE = GitHub(
     repo="anna-geller/prefect-monte-carlo",
@@ -21,4 +20,5 @@ def extract_and_load(dataset: str) -> None:
 
 
 with Flow(FLOW_NAME, storage=STORAGE, run_config=LocalRun(labels=["dev"]),) as flow:
-    ingestion = extract_and_load(DATASET)
+    dataset = Parameter("dataset", default="raw_customers")
+    ingestion = extract_and_load(dataset)
