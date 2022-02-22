@@ -10,6 +10,7 @@ from google.cloud import bigquery
 from google.cloud import storage as gcs
 
 from prefect import task, Flow, Parameter
+from prefect.triggers import always_run
 from prefect.tasks.secrets import PrefectSecret
 from prefect.tasks.monte_carlo.monte_carlo_lineage import (
     MonteCarloCreateOrUpdateNodeWithTags,
@@ -18,7 +19,9 @@ from prefect.tasks.monte_carlo.monte_carlo_lineage import (
 BUCKET_NAME = "prefect-community"
 PROJECT_NAME = "prefect-community"
 monte_carlo = MonteCarloCreateOrUpdateNodeWithTags(
-    object_type="table", resource_name="bigquery-2021-12-09T11:47:30.306Z"
+    object_type="table",
+    resource_name="bigquery-2021-12-09T11:47:30.306Z",
+    trigger=always_run,
 )
 
 

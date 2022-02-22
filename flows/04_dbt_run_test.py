@@ -4,7 +4,7 @@ import prefect
 import pygit2
 from prefect import task, Flow, Parameter
 from prefect.tasks.dbt.dbt import DbtShellTask
-from prefect.triggers import all_finished
+from prefect.triggers import always_run
 
 
 DBT_PROJECT = "dwh"
@@ -27,12 +27,12 @@ def pull_dbt_repo(repo_url: str, branch: str = None):
     pygit2.clone_repository(url=repo_url, path=DBT_PROJECT, checkout_branch=branch)
 
 
-@task(name="Delete DBT folder if exists", trigger=all_finished)
+@task(name="Delete DBT folder if exists", trigger=always_run)
 def delete_dbt_folder_if_exists():
     shutil.rmtree(DBT_PROJECT, ignore_errors=True)
 
 
-@task(trigger=all_finished)
+@task(trigger=always_run)
 def print_dbt_output(output):
     logger = prefect.context.get("logger")
     for line in output:

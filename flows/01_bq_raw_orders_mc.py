@@ -11,15 +11,19 @@ from google.cloud import bigquery
 from google.cloud import storage as gcs
 
 from prefect import task, Flow, Parameter
+from prefect.triggers import always_run
 from prefect.tasks.secrets import PrefectSecret
 from prefect.tasks.monte_carlo.monte_carlo_lineage import (
     MonteCarloCreateOrUpdateNodeWithTags,
 )
 
+# prefect-community:dwh.raw_orders
 BUCKET_NAME = "prefect-community"
 PROJECT_NAME = "prefect-community"
 monte_carlo = MonteCarloCreateOrUpdateNodeWithTags(
-    object_type="table", resource_name="bigquery-2021-12-09T11:47:30.306Z"
+    object_type="table",
+    resource_name="bigquery-2021-12-09T11:47:30.306Z",
+    trigger=always_run,
 )
 
 
@@ -48,7 +52,7 @@ def get_full_table_name(bq_schema_name: str, bq_tbl_name: str):
 
 @task(max_retries=3, retry_delay=timedelta(minutes=1), log_stdout=True)
 def extract_and_load_raw_data(
-        creds: dict, source_file_name: str, destination_file_name: str
+    creds: dict, source_file_name: str, destination_file_name: str
 ):
     records = []
     for _ in range(100):
@@ -72,7 +76,7 @@ def extract_and_load_raw_data(
 
 
 def upload_local_file_to_gcs(
-        creds: dict, source_file_name: str, destination_file_name: str
+    creds: dict, source_file_name: str, destination_file_name: str
 ):
     credentials = service_account.Credentials.from_service_account_info(creds)
     gcs_client = gcs.Client(project=PROJECT_NAME, credentials=credentials)
@@ -122,12 +126,14 @@ with Flow("dwh_raw_orders") as flow:
         lineage_tags=[
             {"propertyName": "data_owner", "propertyValue": "sales"},
             {"propertyName": "data_source_system", "propertyValue": "shop"},
+            # {"propertyName": "a_new_tag", "propertyValue": "workshop"},
         ],
         api_key_id=api_key_id,
         api_token=api_token,
         upstream_tasks=[load],
+        # prefect_context_tags=True
     )
 
 if __name__ == "__main__":
-    flow.visualize()
-    # flow.run()
+    # flow.visualize()
+    flow.run()

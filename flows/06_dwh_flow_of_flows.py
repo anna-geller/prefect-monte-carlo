@@ -16,7 +16,7 @@ with Flow("dwh_flow_of_flows", executor=LocalDaskExecutor(), schedule=schedule) 
     orders = create_flow_run(
         flow_name="dwh_raw_orders",
         project_name=PROJECT_NAME,
-        task_args={"name": "Orders"},
+        task_args={"name": "Raw Orders"},
     )
     orders_flow_run_view = wait_for_flow_run(
         orders,
@@ -28,7 +28,7 @@ with Flow("dwh_flow_of_flows", executor=LocalDaskExecutor(), schedule=schedule) 
     customers = create_flow_run(
         flow_name="dwh_raw_customers",
         project_name=PROJECT_NAME,
-        task_args={"name": "Customers"},
+        task_args={"name": "Raw Customers"},
     )
     customers_flow_run_view = wait_for_flow_run(
         customers,
@@ -40,7 +40,7 @@ with Flow("dwh_flow_of_flows", executor=LocalDaskExecutor(), schedule=schedule) 
     payments = create_flow_run(
         flow_name="dwh_raw_payments",
         project_name=PROJECT_NAME,
-        task_args={"name": "Payments"},
+        task_args={"name": "Raw Payments"},
         upstream_tasks=[orders_flow_run_view, customers_flow_run_view],
     )
     payments_flow_run_view = wait_for_flow_run(
