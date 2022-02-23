@@ -126,7 +126,7 @@ with Flow("dwh_raw_orders") as flow:
         lineage_tags=[
             {"propertyName": "data_owner", "propertyValue": "sales"},
             {"propertyName": "data_source_system", "propertyValue": "shop"},
-            # {"propertyName": "a_new_tag", "propertyValue": "workshop"},
+            # {"propertyName": "a_brand_new_tag", "propertyValue": "workshop"},
         ],
         api_key_id=api_key_id,
         api_token=api_token,
